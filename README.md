@@ -37,7 +37,7 @@ DOM in simple words is a TREE like structure in which  the logical structure of 
 
 
 
-From the above Screenshot we can see there is a structure in which browser access the element and  while writing code you also have to maintain this hierarchy.You cannot (<body>) tag inside (<h1>) tag .
+From the above Screenshot we can see there is a structure in which browser access the element and  while writing code you also have to maintain this hierarchy.
 
 
 
