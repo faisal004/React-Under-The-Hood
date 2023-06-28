@@ -1,22 +1,219 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+  <head>
+    <h1
+      style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <label for="titleInput">Todo App With Reconciliation</h1>
+      <title>Todo App With Reconciliation</title>
+      <style>
+      .descriptionCell {
+        font-weight: 400;
+        font-size: large;
+        width: 25rem;
+        text-align: center;
+      }
+      .titleCell {
+        font-weight: 400;
+        font-size: large;
+        width: 25rem;
+        text-align: center;
+      }
+      .update-button {
+        padding: 5px 10px;
+        background-color: #3682f4;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      .delete-button {
+        padding: 5px 10px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
+
+      <link rel="stylesheet" href="styles.css">
     </head>
+
     <body>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        
-        <script src="" async defer></script>
+      <div id="main"
+        style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 50vh;">
+        <label for="titleInput"
+          style="display: block; margin-bottom: 5px; font-weight: bold;">Title:</label>
+        <input type="text" id="titleInput"
+          style="width: 200px; padding: 5px; margin-bottom: 10px;">
+
+        <label for="descriptionInput"
+          style="display: block; margin-bottom: 5px; font-weight: bold;">Description:</label>
+        <input type="text" id="descriptionInput"
+          style="width: 200px; padding: 5px; margin-bottom: 10px;">
+
+        <button onclick="postData()"
+          style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Send
+          Data</button>
+      </div>
+
+      <table id="mainarea"
+        style="display: flex; flex-direction: column; align-items: center;  height: 10vh;">
+      </table>
+
+      <script>
+
+function updateTodo(id) {
+  var updatedTitle = prompt("Update Title");
+  var updatedDescription = prompt("Update Description");
+
+  if (updatedTitle && updatedDescription) {
+    var data = {
+      title: updatedTitle,
+      description: updatedDescription
+    };
+
+    fetch('http://localhost:3000/todos/' + id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(responseData => {
+        console.log(responseData);
+        fetchData();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+}
+
+
+      function postData() {
+        const title = document.getElementById('titleInput').value;
+        const description = document.getElementById('descriptionInput').value;
+        const data = {
+          title: title,
+          description: description
+        };
+
+        fetch('http://localhost:3000/todos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(responseData => {
+          console.log(responseData);
+          fetchData();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      }
+
+     function fetchData() {
+  fetch('http://localhost:3000/todos', {
+    method: 'GET',
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      var parentElement = document.getElementById("mainarea");
+      var existingRows = Array.from(parentElement.getElementsByTagName("tr"));
+
+      var updatedIds = [];
+
+      for (var i = data.length - 1; i >= 0; i--) {
+        var todo = data[i];
+        var existingRow = existingRows.find(row => row.getAttribute("data-id") === todo.id.toString());
+
+        if (existingRow) {
+          updatedIds.push(todo.id);
+          updateRow(existingRow, todo);
+          existingRows = existingRows.filter(row => row !== existingRow);
+        } else {
+          var newRow = createRow(todo);
+          parentElement.appendChild(newRow);
+        }
+      }
+
+      existingRows.forEach(row => {
+        var rowId = row.getAttribute("data-id");
+        if (!updatedIds.includes(parseInt(rowId))) {
+          row.remove();
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+
+      function createRow(todo) {
+        var row = document.createElement("tr");
+        row.setAttribute("data-id", todo.id);
+
+        var idCell = document.createElement("td");
+        idCell.innerHTML = todo.id;
+
+        var titleCell = document.createElement("td");
+        titleCell.innerHTML = todo.title;
+        titleCell.setAttribute("class", "titleCell");
+
+        var descriptionCell = document.createElement("td");
+        descriptionCell.innerHTML = todo.description;
+        descriptionCell.setAttribute("class", "descriptionCell");
+
+        var deleteButtonCell = document.createElement("td");
+        var deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "Delete";
+        deleteButton.setAttribute("onclick", "deleteTodo(" + todo.id + ")");
+        deleteButton.setAttribute("class", "delete-button");
+        deleteButtonCell.appendChild(deleteButton);
+
+        var updateButtonCell = document.createElement("td");
+        var updateButton = document.createElement("button");
+        updateButton.innerHTML = "Update";
+        updateButton.setAttribute("onclick", "updateTodo(" + todo.id + ")");
+        updateButton.setAttribute("class", "update-button");
+        updateButtonCell.appendChild(updateButton);
+
+        row.appendChild(idCell);
+        row.appendChild(titleCell);
+        row.appendChild(descriptionCell);
+        row.appendChild(deleteButtonCell);
+        row.appendChild(updateButtonCell);
+
+        return row;
+      }
+
+      function updateRow(row, todo) {
+        var cells = row.getElementsByTagName("td");
+        cells[0].innerHTML = todo.id;
+        cells[1].innerHTML = todo.title;
+        cells[2].innerHTML = todo.description;
+      }
+
+      function deleteTodo(id) {
+        fetch('http://localhost:3000/todos/' + id, {
+          method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(responseData => {
+          console.log(responseData);
+          fetchData();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      }
+
+      fetchData();
+    </script>
     </body>
-</html>
+  </html>
