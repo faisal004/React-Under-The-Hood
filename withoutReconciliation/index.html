@@ -19,6 +19,13 @@
                 text-align: center;
                 
             }
+            .update-button {
+              padding: 5px 10px;
+              background-color: #4f36f4;
+              color: white;
+              border: none;
+              cursor: pointer;
+            }
             .delete-button {
               padding: 5px 10px;
               background-color: #f44336;
@@ -111,11 +118,24 @@
                     deleteButton.setAttribute("onclick","deleteTodo("+data[i].id+")")
                     deleteButton.setAttribute("class", "delete-button");
                     deleteButtonCell.appendChild(deleteButton);
+
+
+                    var updateButtonCell = document.createElement("td");
+                    var updateButton = document.createElement("button");
+                    updateButton.innerHTML = "Update";
+                    updateButton.setAttribute("onclick","updateTodo("+data[i].id+")")
+                    updateButton.setAttribute("class", "update-button");
+                    updateButtonCell.appendChild(updateButton);
+
+
+                    
+                    
         
                     row.appendChild(idCell);
                     row.appendChild(titleCell);
                     row.appendChild(descriptionCell);
                     row.appendChild(deleteButtonCell);
+                    row.appendChild(updateButtonCell);
                     parentElement.appendChild(row);
                   }
                 })
@@ -123,6 +143,34 @@
                   console.error('Error:', error);
                 });
             }
+
+            function updateTodo(id) {
+  var updatedTitle = prompt("Update Title");
+  var updatedDescription = prompt("Update Description");
+
+  if (updatedTitle && updatedDescription) {
+    var data = {
+      title: updatedTitle,
+      description: updatedDescription
+    };
+
+    fetch('http://localhost:3000/todos/' + id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(responseData => {
+        console.log(responseData);
+        fetchData();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+}
         
             function deleteTodo(id) {
               fetch('http://localhost:3000/todos/' + id, {
