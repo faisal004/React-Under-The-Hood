@@ -3,9 +3,19 @@
     <head>
         <title>Todo App</title>
         <style>
+               .descriptionCell{
+                font-weight: 400;
+                font-size: large;
+                width: 25rem;
+                text-align: center;
+                
+            }
             .titleCell{
                 font-weight: 400;
                 font-size: large;
+                width: 25rem;
+                text-align: center;
+                
             }
             .delete-button {
               padding: 5px 10px;
@@ -92,6 +102,7 @@
                     titleCell.setAttribute("class","titleCell")
                     var descriptionCell = document.createElement("td");
                     descriptionCell.innerHTML = data[i].description;
+                    descriptionCell.setAttribute("class","descriptionCell")
                     var deleteButtonCell = document.createElement("td");
                     var deleteButton = document.createElement("button");
                     deleteButton.innerHTML = "Delete";
