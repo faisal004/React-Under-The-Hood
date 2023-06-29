@@ -427,5 +427,5 @@ After iterating over all the todos, the code iterates over the remaining existin
 
 ## Feedback
 
-If you have any feedback, please reach out to us at faisalhusain1320@gmail.com
+If you have any feedback, please reach out to me at faisalhusain1320@gmail.com
 
