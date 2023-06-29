@@ -37,7 +37,7 @@ DOM in simple words is a TREE like structure in which  the logical structure of 
 
 
 
-From the above Screenshot we can see there is a structure in which browser access the element and  while writing code you also have to maintain this hierarchy.You cannot <body> tag inside <h1> tag .
+From the above Screenshot we can see there is a structure in which browser access the element and  while writing code you also have to maintain this hierarchy.
 
 
 
@@ -121,5 +121,11 @@ And now when you look at element tab in dev tool it will show whole table is re-
 
 
 https://github.com/faisal004/Reconciliation/assets/88244542/84abaeda-8f59-40d3-9e8b-447e2878b572
+
+
+Now first of all let us understand what problem we are trying to resolve using Reconciliation.
+
+https://github.com/faisal004/Reconciliation/assets/88244542/cb1d9973-73f5-4961-8b83-ff01745bd309
+
 
 
