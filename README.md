@@ -137,3 +137,4 @@ Now question is how we achieved that.
 
 <img width="388" alt="demo-Without" src="https://github.com/faisal004/Reconciliation/assets/88244542/ac64377e-c640-426d-bd2e-b50c8bb0ba98">
 
+This function fetch todos from the backend everytime new todo is added it does not check anything it simply clear all the data inside html and re-renders the whole list again ,which is an inefficient method .To deal with this reconcilition was introduced.
