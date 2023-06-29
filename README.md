@@ -131,10 +131,15 @@ https://github.com/faisal004/Reconciliation/assets/88244542/cb1d9973-73f5-4961-8
 
 Now we can see that without reconcilition when we are adding todo to the list whole table is re-rendered but when Reconciliation is applied only the last row get updated and every thing remain the same.
 
-Now question is how we achieved that.
+Now question is how we achieved that?
 
 #### In without Reconciliation app your javascript code in index.html file inside script tag looks like:
 
 <img width="388" alt="demo-Without" src="https://github.com/faisal004/Reconciliation/assets/88244542/ac64377e-c640-426d-bd2e-b50c8bb0ba98">
 
 This function fetch todos from the backend everytime new todo is added it does not check anything it simply clear all the data inside html and re-renders the whole list again ,which is an inefficient method .To deal with this reconcilition was introduced.
+
+#### In with Reconciliation app your javascript code in index.html file inside script tag looks like:
+<img width="458" alt="demo-with" src="https://github.com/faisal004/Reconciliation/assets/88244542/2b77e242-c33a-424c-83e1-2dfc344b174b">
+
+
