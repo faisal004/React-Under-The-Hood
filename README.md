@@ -417,6 +417,15 @@ Inside the loop, it checks if there is an existing row in the UI for the current
 
 If an existing row is found, it is added to the updatedIds array, and the updateRow() function is called to update the contents of the row with the current todo's data. The existingRows array is then updated to exclude the row that has been updated.
 
+
+
+
 If no existing row is found, it means the current todo is new and does not exist in the UI. In this case, the createRow() function is called to create a new row with the todo's data, and it is appended to the parent element.
 
 After iterating over all the todos, the code iterates over the remaining existingRows that were not updated. For each row, it retrieves the data-id attribute and checks if it is not present in the updatedIds array. If the ID is not in updatedIds, it means the todo was deleted or no longer exists in the data received. In such cases, the row is removed from the UI.
+
+
+## Feedback
+
+If you have any feedback, please reach out to us at faisalhusain1320@gmail.com
+
