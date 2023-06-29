@@ -37,7 +37,8 @@ DOM in simple words is a TREE like structure in which  the logical structure of 
 
 
 
-From the above Screenshot we can see there is a structure in which browser access the element and  while writing code you also have to maintain this hierarchy.
+From the above Screenshot we can see there is a structure in which browser access the element and  while writing code you also have to maintain this hierarchy.You cannot <body> tag inside <h1> tag .
+
 
 
 
@@ -106,5 +107,19 @@ Start the server
 
 ### After setting up the project locally
 
-Lets start with (withoutReconciliation) project first;
+Lets start with (withoutReconciliation) project first:
+if you are running the project locally and adding todos ,now when you open chrome dev tool and look at the element area.First of all turn on paint flashing tool in chrome to do so .
+
+![App Screenshot](https://i.stack.imgur.com/p1DRt.png)
+
+
+Then tickmark paintflashing:
+
+![App Screenshot](https://i.stack.imgur.com/B5BxN.png)
+
+And now when you look at element tab in dev tool it will show whole table is re-rendered when even one item is added:
+
+
+https://github.com/faisal004/Reconciliation/assets/88244542/84abaeda-8f59-40d3-9e8b-447e2878b572
+
 
