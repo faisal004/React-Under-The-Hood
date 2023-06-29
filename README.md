@@ -133,13 +133,274 @@ Now we can see that without reconcilition when we are adding todo to the list wh
 
 Now question is how we achieved that?
 
-#### In without Reconciliation app your javascript code in index.html file inside script tag looks like:
+### In without Reconciliation app your javascript code in index.html file inside script tag looks like:
+```javascript
+   function postData() {
+      const title = document.getElementById('titleInput').value;
+      const description = document.getElementById('descriptionInput').value;
+      const data = {
+        title: title,
+        description: description
+      };
+      fetch('http://localhost:3000/todos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(responseData => {
+          console.log(responseData);
+          fetchData();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
 
-<img width="388" alt="demo-Without" src="https://github.com/faisal004/Reconciliation/assets/88244542/ac64377e-c640-426d-bd2e-b50c8bb0ba98">
+    function createRow(todo) {
+      const row = document.createElement("tr");
+      const idCell = document.createElement("td");
+      idCell.innerHTML = todo.id;
+      const titleCell = document.createElement("td");
+      titleCell.innerHTML = todo.title;
+      titleCell.className = "titleCell";
+      const descriptionCell = document.createElement("td");
+      descriptionCell.innerHTML = todo.description;
+      descriptionCell.className = "descriptionCell";
+      const deleteButtonCell = document.createElement("td");
+      const deleteButton = document.createElement("button");
+      deleteButton.innerHTML = "Delete";
+      deleteButton.onclick = () => deleteTodo(todo.id);
+      deleteButton.className = "delete-button";
+      deleteButtonCell.appendChild(deleteButton);
+      const updateButtonCell = document.createElement("td");
+      const updateButton = document.createElement("button");
+      updateButton.innerHTML = "Update";
+      updateButton.onclick = () => updateTodo(todo.id);
+      updateButton.className = "update-button";
+      updateButtonCell.appendChild(updateButton);
+      row.appendChild(idCell);
+      row.appendChild(titleCell);
+      row.appendChild(descriptionCell);
+      row.appendChild(deleteButtonCell);
+      row.appendChild(updateButtonCell);
+      return row;
+    }
 
-This function fetch todos from the backend everytime new todo is added it does not check anything it simply clear all the data inside html and re-renders the whole list again ,which is an inefficient method .To deal with this reconcilition was introduced.
+    function fetchData() {
+      fetch('http://localhost:3000/todos', {
+          method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          var parentElement = document.getElementById("mainarea");
+          parentElement.innerHTML = '';
+          for (var i = data.length - 1; i >= 0; i--) {
+            const row = createRow(data[i]);
+            parentElement.appendChild(row);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
 
-#### In with Reconciliation app your javascript code in index.html file inside script tag looks like:
-<img width="458" alt="demo-with" src="https://github.com/faisal004/Reconciliation/assets/88244542/2b77e242-c33a-424c-83e1-2dfc344b174b">
+    function updateTodo(id) {
+      var updatedTitle = prompt("Update Title");
+      var updatedDescription = prompt("Update Description");
+      if (updatedTitle && updatedDescription) {
+        var data = {
+          title: updatedTitle,
+          description: updatedDescription
+        };
+        fetch('http://localhost:3000/todos/' + id, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+          .then(response => response.json())
+          .then(responseData => {
+            console.log(responseData);
+            fetchData();
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+    }
+
+    function deleteTodo(id) {
+      fetch('http://localhost:3000/todos/' + id, {
+          method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(responseData => {
+          console.log(responseData);
+          fetchData();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+    fetchData();
 
 
+```
+
+
+
+This function ###fetchData() fetch todos from the backend everytime new todo is added it does not check anything it simply clear all the data inside html and re-renders the whole list again ,which is an inefficient method .To deal with this reconcilition was introduced.
+
+### In with Reconciliation app your javascript code in index.html file inside script tag looks like:
+
+
+
+
+```javascript
+function updateTodo(id) {
+      var updatedTitle = prompt("Update Title");
+      var updatedDescription = prompt("Update Description");
+      if (updatedTitle && updatedDescription) {
+        var data = {
+          title: updatedTitle,
+          description: updatedDescription
+        };
+        fetch('http://localhost:3000/todos/' + id, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+          .then(response => response.json())
+          .then(responseData => {
+            console.log(responseData);
+            fetchData();
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+    }
+
+    function postData() {
+      const title = document.getElementById('titleInput').value;
+      const description = document.getElementById('descriptionInput').value;
+      const data = {
+        title: title,
+        description: description
+      };
+      fetch('http://localhost:3000/todos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(responseData => {
+          console.log(responseData);
+          fetchData();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    function fetchData() {
+      fetch('http://localhost:3000/todos', {
+          method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          var parentElement = document.getElementById("mainarea");
+          var existingRows = Array.from(parentElement.getElementsByTagName("tr"));
+          var updatedIds = [];
+          for (var i = data.length - 1; i >= 0; i--) {
+            var todo = data[i];
+            var existingRow = existingRows.find(row => row.getAttribute("data-id") === todo.id.toString());
+            if (existingRow) {
+              updatedIds.push(todo.id);
+              updateRow(existingRow, todo);
+              existingRows = existingRows.filter(row => row !== existingRow);
+            } else {
+              var newRow = createRow(todo);
+              parentElement.appendChild(newRow);
+            }
+          }
+          existingRows.forEach(row => {
+            var rowId = row.getAttribute("data-id");
+            if (!updatedIds.includes(parseInt(rowId))) {
+              row.remove();
+            }
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    function createRow(todo) {
+      var row = document.createElement("tr");
+      row.setAttribute("data-id", todo.id);
+      var idCell = document.createElement("td");
+      idCell.innerHTML = todo.id;
+      var titleCell = document.createElement("td");
+      titleCell.innerHTML = todo.title;
+      titleCell.setAttribute("class", "titleCell");
+      var descriptionCell = document.createElement("td");
+      descriptionCell.innerHTML = todo.description;
+      descriptionCell.setAttribute("class", "descriptionCell");
+      var deleteButtonCell = document.createElement("td");
+      var deleteButton = document.createElement("button");
+      deleteButton.innerHTML = "Delete";
+      deleteButton.setAttribute("onclick", "deleteTodo(" + todo.id + ")");
+      deleteButton.setAttribute("class", "delete-button");
+      deleteButtonCell.appendChild(deleteButton);
+      var updateButtonCell = document.createElement("td");
+      var updateButton = document.createElement("button");
+      updateButton.innerHTML = "Update";
+      updateButton.setAttribute("onclick", "updateTodo(" + todo.id + ")");
+      updateButton.setAttribute("class", "update-button");
+      updateButtonCell.appendChild(updateButton);
+      row.appendChild(idCell);
+      row.appendChild(titleCell);
+      row.appendChild(descriptionCell);
+      row.appendChild(deleteButtonCell);
+      row.appendChild(updateButtonCell);
+      return row;
+    }
+
+    function updateRow(row, todo) {
+      var cells = row.getElementsByTagName("td");
+      cells[0].innerHTML = todo.id;
+      cells[1].innerHTML = todo.title;
+      cells[2].innerHTML = todo.description;
+    }
+
+    function deleteTodo(id) {
+      fetch('http://localhost:3000/todos/' + id, {
+          method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(responseData => {
+          console.log(responseData);
+          fetchData();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+    fetchData();
+```
+
+
+
+Now lets breakdown what we are doing here:
+In fetch data function 
