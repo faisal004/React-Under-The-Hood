@@ -1,192 +1,178 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <h1 style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <label for="titleInput">Todo App Without Reconciliation</h1>
-        <title>Todo App</title>
-        <style>
-               .descriptionCell{
-                font-weight: 400;
-                font-size: large;
-                width: 25rem;
-                text-align: center;
-                
-            }
-            .titleCell{
-                font-weight: 400;
-                font-size: large;
-                width: 25rem;
-                text-align: center;
-                
-            }
-            .update-button {
-              padding: 5px 10px;
-              background-color: #4f36f4;
-              color: white;
-              border: none;
-              cursor: pointer;
-            }
-            .delete-button {
-              padding: 5px 10px;
-              background-color: #f44336;
-              color: white;
-              border: none;
-              cursor: pointer;
-            }
-          </style>
 
-        <link rel="stylesheet" href="styles.css">
+<head>
+  <h1 style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <label for="titleInput">Todo App Without Reconciliation</h1>
+  <title>Todo App</title>
+  <style>
+    .descriptionCell {
+      font-weight: 400;
+      font-size: large;
+      width: 25rem;
+      text-align: center;
 
-    </head>
+    }
 
-    <body>
-        <div id="main"
-            style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 50vh;">
-            <label for="titleInput"
-                style="display: block; margin-bottom: 5px; font-weight: bold;">Title:</label>
-            <input type="text" id="titleInput"
-                style="width: 200px; padding: 5px; margin-bottom: 10px;">
+    .titleCell {
+      font-weight: 400;
+      font-size: large;
+      width: 25rem;
+      text-align: center;
 
-            <label for="descriptionInput"
-                style="display: block; margin-bottom: 5px; font-weight: bold;">Description:</label>
-            <input type="text" id="descriptionInput"
-                style="width: 200px; padding: 5px; margin-bottom: 10px;">
+    }
 
-            <button onclick="postData()"
-                style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Send
-                Data</button>
-        </div>
-       
-        <table id="mainarea"
-            style="display: flex; flex-direction: column; align-items: center;  height: 10vh; ">
-           
-        </table>
-        <script>
-            function postData() {
-              const title = document.getElementById('titleInput').value;
-              const description = document.getElementById('descriptionInput').value;
-              const data = {
-                title: title,
-                description: description
-              };
-        
-              fetch('http://localhost:3000/todos', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-              })
-              .then(response => response.json())
-              .then(responseData => {
-                
-                console.log(responseData);
-                fetchData(); 
-              })
-              .catch(error => {
-                
-                console.error('Error:', error);
-              });
-            }
-        
-            function fetchData() {
-              fetch('http://localhost:3000/todos', {
-                method: 'GET',
-              })
-                .then(response => response.json())
-                .then(data => {
-               
-                  console.log(data);
-                  var parentElement = document.getElementById("mainarea");
-                  parentElement.innerHTML = ''; 
-        
-                  for (var i = data.length-1; i >=0; i--) {
-                    var row = document.createElement("tr");
-                   
-                    var idCell = document.createElement("td");
-                    idCell.innerHTML = data[i].id;
-                    var titleCell = document.createElement("td");
-                    
-                    titleCell.innerHTML = data[i].title;
-                    titleCell.setAttribute("class","titleCell")
-                    var descriptionCell = document.createElement("td");
-                    descriptionCell.innerHTML = data[i].description;
-                    descriptionCell.setAttribute("class","descriptionCell")
-                    var deleteButtonCell = document.createElement("td");
-                    var deleteButton = document.createElement("button");
-                    deleteButton.innerHTML = "Delete";
-                    deleteButton.setAttribute("onclick","deleteTodo("+data[i].id+")")
-                    deleteButton.setAttribute("class", "delete-button");
-                    deleteButtonCell.appendChild(deleteButton);
+    .update-button {
+      padding: 5px 10px;
+      background-color: #4f36f4;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
 
+    .delete-button {
+      padding: 5px 10px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
 
-                    var updateButtonCell = document.createElement("td");
-                    var updateButton = document.createElement("button");
-                    updateButton.innerHTML = "Update";
-                    updateButton.setAttribute("onclick","updateTodo("+data[i].id+")")
-                    updateButton.setAttribute("class", "update-button");
-                    updateButtonCell.appendChild(updateButton);
+</head>
 
+<body>
+  <div id="main"
+    style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 50vh;">
+    <label for="titleInput" style="display: block; margin-bottom: 5px; font-weight: bold;">Title:</label>
+    <input type="text" id="titleInput" style="width: 200px; padding: 5px; margin-bottom: 10px;">
 
-                    
-                    
-        
-                    row.appendChild(idCell);
-                    row.appendChild(titleCell);
-                    row.appendChild(descriptionCell);
-                    row.appendChild(deleteButtonCell);
-                    row.appendChild(updateButtonCell);
-                    parentElement.appendChild(row);
-                  }
-                })
-                .catch(error => {
-                  console.error('Error:', error);
-                });
-            }
+    <label for="descriptionInput" style="display: block; margin-bottom: 5px; font-weight: bold;">Description:</label>
+    <input type="text" id="descriptionInput" style="width: 200px; padding: 5px; margin-bottom: 10px;">
 
-            function updateTodo(id) {
-  var updatedTitle = prompt("Update Title");
-  var updatedDescription = prompt("Update Description");
+    <button onclick="postData()"
+      style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Send
+      Data</button>
+  </div>
 
-  if (updatedTitle && updatedDescription) {
-    var data = {
-      title: updatedTitle,
-      description: updatedDescription
-    };
+  <table id="mainarea" style="display: flex; flex-direction: column; align-items: center;  height: 10vh; ">
 
-    fetch('http://localhost:3000/todos/' + id, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-      .then(response => response.json())
-      .then(responseData => {
-        console.log(responseData);
-        fetchData();
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
-}
-        
-            function deleteTodo(id) {
-              fetch('http://localhost:3000/todos/' + id, {
-                method: 'DELETE',
-              })
-                .then(response => response.json())
-                .then(responseData => {
-                  console.log(responseData);
-                  fetchData(); 
-                })
-                .catch(error => {
-                  console.error('Error:', error);
-                });
-            }
-        
+  </table>
+  <script>
+    function postData() {
+      const title = document.getElementById('titleInput').value;
+      const description = document.getElementById('descriptionInput').value;
+      const data = {
+        title: title,
+        description: description
+      };
+      fetch('http://localhost:3000/todos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(responseData => {
+          console.log(responseData);
+          fetchData();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    function createRow(todo) {
+      const row = document.createElement("tr");
+      const idCell = document.createElement("td");
+      idCell.innerHTML = todo.id;
+      const titleCell = document.createElement("td");
+      titleCell.innerHTML = todo.title;
+      titleCell.className = "titleCell";
+      const descriptionCell = document.createElement("td");
+      descriptionCell.innerHTML = todo.description;
+      descriptionCell.className = "descriptionCell";
+      const deleteButtonCell = document.createElement("td");
+      const deleteButton = document.createElement("button");
+      deleteButton.innerHTML = "Delete";
+      deleteButton.onclick = () => deleteTodo(todo.id);
+      deleteButton.className = "delete-button";
+      deleteButtonCell.appendChild(deleteButton);
+      const updateButtonCell = document.createElement("td");
+      const updateButton = document.createElement("button");
+      updateButton.innerHTML = "Update";
+      updateButton.onclick = () => updateTodo(todo.id);
+      updateButton.className = "update-button";
+      updateButtonCell.appendChild(updateButton);
+      row.appendChild(idCell);
+      row.appendChild(titleCell);
+      row.appendChild(descriptionCell);
+      row.appendChild(deleteButtonCell);
+      row.appendChild(updateButtonCell);
+      return row;
+    }
+
+    function fetchData() {
+      fetch('http://localhost:3000/todos', {
+          method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          var parentElement = document.getElementById("mainarea");
+          parentElement.innerHTML = '';
+          for (var i = data.length - 1; i >= 0; i--) {
+            const row = createRow(data[i]);
+            parentElement.appendChild(row);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    function updateTodo(id) {
+      var updatedTitle = prompt("Update Title");
+      var updatedDescription = prompt("Update Description");
+      if (updatedTitle && updatedDescription) {
+        var data = {
+          title: updatedTitle,
+          description: updatedDescription
+        };
+        fetch('http://localhost:3000/todos/' + id, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+          .then(response => response.json())
+          .then(responseData => {
+            console.log(responseData);
             fetchData();
-          </script>
-    </body>
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+    }
+
+    function deleteTodo(id) {
+      fetch('http://localhost:3000/todos/' + id, {
+          method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(responseData => {
+          console.log(responseData);
+          fetchData();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+    fetchData();
+  </script>
+</body>
+
 </html>
